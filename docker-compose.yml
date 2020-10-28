@@ -1,0 +1,44 @@
+version: '3.8'
+services:
+  spring-app:
+    container_name: spring-app
+    image: rparias/springtest
+    networks:
+      - internal-network
+    environment:
+      - USER_DB=springstudent
+      - PASSWORD_DB=springstudent
+    ports:
+      - 8080:8080
+    depends_on:
+      - mysqldb
+    links:
+      - mysqldb
+    command:
+      [
+        './wait-for-mysqldb.sh',
+        'mysqldb:3306',
+        '-t',
+        '6000',
+        '--',
+        'java',
+        '-jar',
+        './demo-apirest-0.0.1-SNAPSHOT.jar',
+      ]
+  mysqldb:
+    container_name: mysqldb
+    image: mysql:8.0
+    networks:
+      - internal-network
+    environment:
+      - MYSQL_ROOT_PASSWORD=my-secret-pw
+      - MYSQL_USER=springstudent
+      - MYSQL_PASSWORD=springstudent
+      - MYSQL_DATABASE=web_customer_tracker
+    volumes:
+      - './data:/var/lib/mysql'
+volumes:
+  data:
+networks:
+  internal-network:
+# docker exec -i mysqldb sh -c 'exec mysql -u"$MYSQL_USER" -p"$MYSQL_PASSWORD"' < $PWD/script.sql
