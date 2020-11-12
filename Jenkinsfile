@@ -1,9 +1,12 @@
 pipeline {
     agent any
     stages {
-        stage('Stage 1') {
+        stage('Build Jar') {
             steps {
-                echo 'Hello World'
+                dir('demo-apirest-crud') {
+                    sh 'mvn clean install'
+                    sh 'ls -la target/'
+                }
             }
         }
     }
