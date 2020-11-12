@@ -4,7 +4,7 @@ pipeline {
         stage('Build Jar') {
             steps {
                 dir('demo-apirest-crud') {
-                    sh 'mvn clean install'
+                    sh './mvnw clean install'
                     sh 'ls -la target/'
                 }
             }
