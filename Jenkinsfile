@@ -5,7 +5,7 @@ pipeline {
             steps {
                 dir('demo-apirest-crud') {
                     sh 'mvn -v'
-                    sh 'mvn clean install'
+                    sh 'mvn clean install -DskipTests'
                     sh 'ls -la target/'
                 }
             }
