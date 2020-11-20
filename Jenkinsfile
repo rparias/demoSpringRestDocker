@@ -1,10 +1,9 @@
 pipeline {
-    agent any
+    agent { docker { image 'maven' } }
     stages {
         stage('Build Jar') {
             steps {
                 dir('demo-apirest-crud') {
-                    sh 'echo Prueba de Docker y maven'
                     sh 'docker run -it --rm maven:3.3-jdk-8 mvn clean install'
                     sh 'ls -la target/'
                 }
@@ -12,7 +11,7 @@ pipeline {
         }
         stage('Build Docker image') {
             steps {
-                sh 'docker ps'
+                sh 'Build Docker Image'
             }
         }
     }
