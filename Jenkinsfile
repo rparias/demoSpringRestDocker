@@ -1,7 +1,7 @@
 pipeline {
-    agent { docker { image 'maven' } }
     stages {
         stage('Build Jar') {
+            agent { docker { image 'maven' } }
             steps {
                 dir('demo-apirest-crud') {
                     sh 'mvn -v'
@@ -12,7 +12,9 @@ pipeline {
         }
         stage('Build Docker image') {
             steps {
-                echo 'Build Docker Image'
+                dir('demo-apirest-crud') {
+                    sh "docker build -t rparias/springtest:v${BUILD_NUMBER} ."
+                }
             }
         }
     }
