@@ -24,7 +24,7 @@ pipeline {
         // }
         stage('Deploy to Server') {
             steps {
-                sh 'scp -i ~/.ssh/id_rsa ./docker-compose.yml ronaldarias@10.211.55.5/home/ronaldarias/server'
+                sh 'scp -i ~/.ssh/id_rsa ./docker-compose.yml ./script.sql ronaldarias@10.211.55.5:/home/ronaldarias/server'
             }
         }
     }
