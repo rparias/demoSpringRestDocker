@@ -8,6 +8,7 @@ services:
     environment:
       - USER_DB=springstudent
       - PASSWORD_DB=springstudent
+      - HOST=mysqldb
     ports:
       - 8080:8080
     depends_on:

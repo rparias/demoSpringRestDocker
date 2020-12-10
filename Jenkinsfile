@@ -24,8 +24,8 @@ pipeline {
         }
         stage('Deploy to Server') {
             steps {
-                sh 'scp -i ~/.ssh/id_rsa ./docker-compose.yml ./script.sql ronaldarias@10.211.55.5:/home/ronaldarias/server'
-                sh 'ssh -i ~/.ssh/id_rsa ronaldarias@10.211.55.5 "export BUILD_NUMBER=${BUILD_NUMBER} && cd server && docker-compose up mysqldb"'
+                sh 'scp -i ~/.ssh/id_rsa ./docker-compose-app.yml ./script.sql ronaldarias@10.211.55.5:/home/ronaldarias/server'
+                sh 'ssh -i ~/.ssh/id_rsa ronaldarias@10.211.55.5 "export BUILD_NUMBER=${BUILD_NUMBER} && cd server && docker-compose -f docker-compose-app.yml up"'
             }
         }
     }
