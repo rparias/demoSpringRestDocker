@@ -25,6 +25,7 @@ pipeline {
         stage('Deploy to Server') {
             steps {
                 sh 'scp -i ~/.ssh/id_rsa ./docker-compose-app.yml ronaldarias@10.211.55.6:/home/ronaldarias/server'
+                sh 'ssh -i ~/.ssh/id_rsa ronaldarias@10.211.55.6 "docker ps -q --filter "name=spring-app" | grep -q . && docker stop spring-app && docker rm -fv spring-app"'
                 sh 'ssh -i ~/.ssh/id_rsa ronaldarias@10.211.55.6 "export BUILD_NUMBER=${BUILD_NUMBER} && cd server && docker-compose -f docker-compose-app.yml up -d"'
             }
         }
