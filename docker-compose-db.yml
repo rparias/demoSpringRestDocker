@@ -1,0 +1,19 @@
+version: '3.8'
+services:
+  mysqldb:
+    container_name: mysqldb
+    image: mysql:8.0
+    networks:
+      - internal-network
+    environment:
+      - MYSQL_ROOT_PASSWORD=my-secret-pw
+      - MYSQL_USER=springstudent
+      - MYSQL_PASSWORD=springstudent
+      - MYSQL_DATABASE=web_customer_tracker
+    volumes:
+      - './data:/var/lib/mysql'
+volumes:
+  data:
+networks:
+  internal-network:
+# docker exec -i mysqldb sh -c 'exec mysql -u"$MYSQL_USER" -p"$MYSQL_PASSWORD"' < $PWD/script.sql
