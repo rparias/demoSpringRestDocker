@@ -21,6 +21,12 @@ pipeline {
                     }
                 }
             }
+            post {
+                success {
+                    echo 'Deleting image from Jenkins'
+                    sh "docker rmi rparias/springtest:v${BUILD_NUMBER}"
+                }
+            }
         }
         stage('Deploy to Server') {
             steps {
