@@ -1,0 +1,28 @@
+def my_choices_list = []
+
+node('master') {
+    stage('prepare choices') {
+        withCredentials([usernamePassword(credentialsId: 'docker_hub', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+            sh "docker login --username ${USERNAME} --password ${PASSWORD}"
+            // read the folder contents
+            def my_choices = sh script: './get_docker_images.sh', returnStdout:true
+            // make a list out of it - I haven't tested this!
+            my_choices_list = my_choices.trim().split('\n')
+        }
+    }
+}
+
+pipeline {
+    agent any
+    parameters {
+        choice(name: 'CHOICE', choices: my_choices_list, description: 'Pick something')
+    }
+    stages {
+        stage('Deploy to STG') {
+            steps {
+                sh 'scp -i ~/.ssh/id_rsa ./docker-compose-app.yml ronaldarias@10.211.55.6:/home/ronaldarias/server'
+                sh 'ssh -i ~/.ssh/id_rsa ronaldarias@10.211.55.6 "export BUILD_NUMBER=${BUILD_NUMBER} && cd server && sh stop-spring-app.sh && docker-compose -f docker-compose-app.yml up -d"'
+            }
+        }
+    }
+}
