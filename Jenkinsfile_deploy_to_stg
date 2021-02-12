@@ -1,13 +1,12 @@
-def my_choices_list = []
+def docker_image_tags = []
 
 node('master') {
     stage('prepare choices') {
         withCredentials([usernamePassword(credentialsId: 'docker_hub', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
             sh "docker login --username ${USERNAME} --password ${PASSWORD}"
-            // read the folder contents
-            def my_choices = sh script: './get_docker_images.sh', returnStdout:true
-            // make a list out of it - I haven't tested this!
-            my_choices_list = my_choices.trim().split('\n')
+            //get tags from docker hub
+            def tags = sh script: "wget -q https://registry.hub.docker.com/v1/repositories/rparias/springtest/tags -O -  | sed -e 's/[][]//g' -e 's/\"//g' -e 's/ //g' | tr '}' '\n'  | awk -F: '{print \$3}'", returnStdout:true
+            docker_image_tags = tags
         }
     }
 }
@@ -15,7 +14,7 @@ node('master') {
 pipeline {
     agent any
     parameters {
-        choice(name: 'CHOICE', choices: my_choices_list, description: 'Pick something')
+        choice(name: 'VERSION', choices: docker_image_tags, description: 'Pick something')
     }
     stages {
         stage('Deploy to STG') {
