@@ -31,8 +31,15 @@ pipeline {
         stage('Deploy to Server') {
             steps {
                 sh 'scp -i ~/.ssh/id_rsa ./docker-compose-app.yml ronaldarias@10.211.55.6:/home/ronaldarias/server'
-                sh 'ssh -i ~/.ssh/id_rsa ronaldarias@10.211.55.6 "export BUILD_NUMBER=${BUILD_NUMBER} && cd server && sh stop-spring-app.sh && docker-compose -f docker-compose-app.yml up -d"'
+                sh 'ssh -i ~/.ssh/id_rsa ronaldarias@10.211.55.6 "export BUILD_NUMBER=${BUILD_NUMBER} && export APP_NAME=spring-app && cd server && sh stop-spring-app.sh && docker-compose -f docker-compose-app.yml up -d"'
             }
         }
     }
+//buscar q el terminal me devuelva 0 (exit code 0), y tambien que el prune ponga por defecto Y, y crear el script para la fecha
+//crear el post despues de todo para borrar las images
 }
+
+// q pasos deberia tener el pipeline de produccion
+// armar un caso de estudio, basado en eso vamos a disenar el pipeline
+// averiguar como usar la api de docker registry y docker hub
+// se pueden leer todos los tags en el docker registry

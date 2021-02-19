@@ -19,8 +19,8 @@ pipeline {
     stages {
         stage('Deploy to STG') {
             steps {
-                sh 'scp -i ~/.ssh/id_rsa ./docker-compose-app.yml ronaldarias@10.211.55.6:/home/ronaldarias/server'
-                sh 'ssh -i ~/.ssh/id_rsa ronaldarias@10.211.55.6 "export BUILD_NUMBER=${BUILD_NUMBER} && cd server && sh stop-spring-app.sh && docker-compose -f docker-compose-app.yml up -d"'
+                sh 'scp -i ~/.ssh/id_rsa ./docker-compose-app-stg.yml stop-spring-app.sh ronaldarias@10.211.55.6:/home/ronaldarias/server/stg'
+                sh 'ssh -i ~/.ssh/id_rsa ronaldarias@10.211.55.6 "export BUILD_NUMBER=${VERSION} && export APP_NAME=spring-app-stg && cd server/stg && sh stop-spring-app.sh && docker-compose -f docker-compose-app-stg.yml up -d"'
             }
         }
     }
