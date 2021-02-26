@@ -5,7 +5,7 @@ pipeline {
     }
     stages {
         stage('Select Build') {
-            node {
+            steps {
                 withCredentials([usernamePassword(credentialsId: 'docker_hub', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                     sh "docker login --username ${USERNAME} --password ${PASSWORD}"
                     //get tags from docker hub
