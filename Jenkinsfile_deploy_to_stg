@@ -2,9 +2,6 @@ def docker_image_tags = []
 
 pipeline {
     agent any
-    parameters {
-        choice(name: 'VERSION', choices: docker_image_tags, description: 'Pick something')
-    }
     stages {
         stage('Select Build') {
             steps {
@@ -20,15 +17,12 @@ pipeline {
                                 message: 'Please select a build to deploy',
                                 parameters: [
                                     choice(
-                                        name: 'selectedTagVersion',
+                                        name: 'VERSION',
                                         choices: docker_image_tags,
                                         description: 'List of successful builds, sorted by descending build date')
                                 ]
                             )
                         }
-                    }
-                    script {
-                        env.VERSION = selectedTagVersion
                     }
                     echo "tag version: ${VERSION}"
                 }
