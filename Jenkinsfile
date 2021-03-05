@@ -32,7 +32,7 @@ pipeline {
             steps {
                 script {
                     def TAG = "v${BUILD_NUMBER}"
-                    sh 'scp -i ~/.ssh/id_rsa ./docker-compose-app.yml ronaldarias@10.211.55.6:/home/ronaldarias/server'
+                    sh 'scp -i ~/.ssh/id_rsa ./docker-compose-app.yml ./docker-compose-db.yml ./script.sql ./stop-spring-app/sh ronaldarias@10.211.55.6:/home/ronaldarias/server'
                     sh "ssh -i ~/.ssh/id_rsa ronaldarias@10.211.55.6 'export BUILD_NUMBER=${TAG} && export APP_NAME=spring-app && cd server && sh stop-spring-app.sh && docker-compose -f docker-compose-app.yml up -d'"
                 }
             }
