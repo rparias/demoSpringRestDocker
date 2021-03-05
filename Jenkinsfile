@@ -30,9 +30,11 @@ pipeline {
         }
         stage('Deploy to Server') {
             steps {
-                TAG = "v${BUILD_NUMBER}"
-                sh 'scp -i ~/.ssh/id_rsa ./docker-compose-app.yml ronaldarias@10.211.55.6:/home/ronaldarias/server'
-                sh 'ssh -i ~/.ssh/id_rsa ronaldarias@10.211.55.6 "export BUILD_NUMBER=${TAG} && export APP_NAME=spring-app && cd server && sh stop-spring-app.sh && docker-compose -f docker-compose-app.yml up -d"'
+                script {
+                    def TAG = "v${BUILD_NUMBER}"
+                    sh 'scp -i ~/.ssh/id_rsa ./docker-compose-app.yml ronaldarias@10.211.55.6:/home/ronaldarias/server'
+                    sh "ssh -i ~/.ssh/id_rsa ronaldarias@10.211.55.6 'export BUILD_NUMBER=${TAG} && export APP_NAME=spring-app && cd server && sh stop-spring-app.sh && docker-compose -f docker-compose-app.yml up -d'"
+                }
             }
         }
     }
