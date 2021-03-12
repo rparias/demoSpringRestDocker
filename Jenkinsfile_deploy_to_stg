@@ -8,8 +8,7 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'docker_hub', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                     sh "docker login --username ${USERNAME} --password ${PASSWORD}"
                     script {
-                        //get tags from docker hub
-                        docker_image_tags = sh script: "wget -q https://registry.hub.docker.com/v1/repositories/rparias/springtest/tags -O -  | sed -e 's/[][]//g' -e 's/\"//g' -e 's/ //g' | tr '}' '\n'  | awk -F: '{print \$3}'", returnStdout:true
+                        docker_image_tags = sh script: './get-app-versions.sh', returnStdout:true
                     }
                     timeout(time: 3, unit: 'HOURS') {
                         script {
