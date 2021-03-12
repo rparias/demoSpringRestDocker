@@ -1,4 +1,7 @@
-scp -i ~/.ssh/id_rsa ./docker-compose-app.yml ./docker-compose-db.yml \
-./script.sql ./stop-spring-app.sh ronaldarias@$1:/home/ronaldarias/server
+server_ip=$1
+version=$2
 
-ssh -i ~/.ssh/id_rsa ronaldarias@$1 "export BUILD_NUMBER=$2 && export APP_NAME=spring-app && cd server && sh stop-spring-app.sh && docker-compose -f docker-compose-app.yml up -d"
+scp -i ~/.ssh/id_rsa ./docker-compose-app.yml ./docker-compose-db.yml \
+./script.sql ./stop-spring-app.sh ronaldarias@$server_ip:/home/ronaldarias/server
+
+ssh -i ~/.ssh/id_rsa ronaldarias@$server_ip "export BUILD_NUMBER=$version && export APP_NAME=spring-app && cd server && sh stop-spring-app.sh && docker-compose -f docker-compose-app.yml up -d"
