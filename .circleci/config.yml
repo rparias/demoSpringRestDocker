@@ -21,8 +21,6 @@ workflows:
           context:
             - docker-hub-context
           image: rparias/springtest:v${CIRCLE_BUILD_NUM}
-          docker-username: DOCKERHUB_LOGIN
-          docker-password: DOCKER_PASSWORD
           requires:
             - Build Jar
 
