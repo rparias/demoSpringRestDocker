@@ -15,8 +15,16 @@ workflows:
       - build-jar:
           name: Build Jar
           filters: *branch-master-filter
+      - docker/publish:
+          name: Build and deploy image to docker
+          filters: *branch-master-filter
           context:
             - docker-hub-context
+          image: rparias/springtest:v${CIRCLE_BUILD_NUM}
+          docker-username: DOCKERHUB_LOGIN
+          docker-password: DOCKER_PASSWORD
+          requires:
+            - Build Jar
 
 jobs:
   build-jar:
@@ -32,7 +40,3 @@ jobs:
             mvn -v
             mvn clean install
             ls -la target/
-      - docker/publish:
-          image: rparias/springtest:v${CIRCLE_BUILD_NUM}
-          docker-username: ${DOCKERHUB_LOGIN}
-          docker-password: ${DOCKER_PASSWORD}
