@@ -32,10 +32,7 @@ jobs:
             mvn -v
             mvn clean install
             ls -la target/
-      - docker/install-docker
-      - run:
-          name: Build and Push Docker image
-          command: |
-            docker login --username ${DOCKERHUB_USERNAME} --password ${DOCKERHUB_PASS}
-            docker build -t rparias/springtest:v${CIRCLE_BUILD_NUM} .
-            docker push rparias/springtest:v${CIRCLE_BUILD_NUM}
+      - docker/publish:
+          image: rparias/springtest:v${CIRCLE_BUILD_NUM}
+          docker-username: ${DOCKERHUB_LOGIN}
+          docker-password: ${DOCKER_PASSWORD}
