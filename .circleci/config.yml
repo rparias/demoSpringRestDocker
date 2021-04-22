@@ -18,11 +18,12 @@ workflows:
 
 jobs:
   build-jar:
+    working_directory: ~/demoSpringRestDocker/demo-apirest-crud
     docker:
       - image: maven
     steps:
       - checkout:
-          path: ~/demo-apirest-crud
+          path: ~/demoSpringRestDocker
       - run:
           name: Install Dependencies
           command: |
