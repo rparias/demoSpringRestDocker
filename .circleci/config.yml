@@ -20,7 +20,7 @@ workflows:
           filters: *branch-master-filter
           context:
             - docker-hub-context
-          image: rparias/springtest:v${CIRCLE_BUILD_NUM}
+          image: rparias/springtest
           requires:
             - Build Jar
 
