@@ -21,6 +21,7 @@ workflows:
           context:
             - docker-hub-context
           image: rparias/springtest
+          dockerfile: /home/circleci/project/demo-apirest-crud/Dockerfile
           requires:
             - Build Jar
 
