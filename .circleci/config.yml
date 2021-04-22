@@ -7,7 +7,7 @@ branch-master-filter: &branch-master-filter
     ignore: /.*/
 
 orbs:
-  welcome: circleci/welcome-orb@0.4.1
+  docker: circleci/docker@1.5.0
 
 workflows:
   dev-release:
@@ -32,8 +32,9 @@ jobs:
             mvn -v
             mvn clean install
             ls -la target/
+      - docker/install-docker
       - run:
-          name: Build Docker image
+          name: Build and Push Docker image
           command: |
             docker login --username ${DOCKERHUB_USERNAME} --password ${DOCKERHUB_PASS}
             docker build -t rparias/springtest:v${CIRCLE_BUILD_NUM} .
