@@ -22,7 +22,7 @@ jobs:
   build-jar:
     working_directory: ~/demoSpringRestDocker/demo-apirest-crud
     docker:
-      - image: cimg-openjdk
+      - image: cimg/openjdk
     steps:
       - checkout:
           path: ~/demoSpringRestDocker
