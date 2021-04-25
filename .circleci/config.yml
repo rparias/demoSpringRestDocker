@@ -32,9 +32,10 @@ jobs:
             mvn -v
             mvn clean install
             ls -la target/
-      - run:
-          name: Build Docker Image
-          command: |
-            TAG=0.1.$CIRCLE_BUILD_NUM
-            docker login --username ${DOCKER_LOGIN} --password ${DOCKER_PASSWORD}
-            docker push rparias/springtest:v${TAG}
+      - docker/build:
+          dockerfile: demo-apirest-crud/Dockerfile
+          image: rparias/springtest
+          tag: 0.1.$CIRCLE_BUILD_NUM
+      - docker/push:
+          image: rparias/springtest 
+          tag: 0.1.$CIRCLE_BUILD_NUM
