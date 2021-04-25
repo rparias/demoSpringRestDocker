@@ -30,6 +30,7 @@ jobs:
             mvn -v
             mvn clean install
             ls -la target/
+      - docker/install-docker
       - docker/build:
           dockerfile: demo-apirest-crud/Dockerfile
           image: rparias/springtest
