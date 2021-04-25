@@ -15,18 +15,18 @@ workflows:
       - build-jar:
           name: Build Jar
           filters: *branch-master-filter
+          context:
+            - docker-hub-context
 
 jobs:
   build-jar:
     working_directory: ~/demoSpringRestDocker/demo-apirest-crud
     docker:
       - image: maven
+      - image: docker
     steps:
       - checkout:
           path: ~/demoSpringRestDocker
-      - run:
-          name: Install Docker client
-          command: apk add docker-cli
       - run:
           name: Install Dependencies
           command: |
@@ -37,5 +37,5 @@ jobs:
           name: Build Docker Image
           command: |
             TAG=0.1.$CIRCLE_BUILD_NUM
-            docker login --username ${USERNAME} --password ${PASSWORD}
+            docker login --username ${DOCKER_LOGIN} --password ${DOCKER_PASSWORD}
             docker push rparias/springtest:v${TAG}
