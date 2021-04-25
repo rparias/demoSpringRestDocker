@@ -23,9 +23,6 @@ jobs:
     working_directory: ~/demoSpringRestDocker/demo-apirest-crud
     docker:
       - image: cimg/openjdk:14.0
-        auth:
-          username: $DOCKER_LOGIN
-          password: $DOCKER_PASSWORD
     steps:
       - checkout:
           path: ~/demoSpringRestDocker
@@ -42,5 +39,6 @@ jobs:
           name: Build Docker Image
           command: |
             TAG=0.1.$CIRCLE_BUILD_NUM
+            docker login --username ${DOCKER_LOGIN} --password ${DOCKER_PASSWORD}
             docker build -t rparias/springtest:v$TAG .
             docker push rparias/springtest:v${TAG}
