@@ -15,15 +15,6 @@ workflows:
       - build-jar:
           name: Build Jar
           filters: *branch-master-filter
-      - docker/publish:
-          name: Build and deploy image to docker
-          filters: *branch-master-filter
-          context:
-            - docker-hub-context
-          image: rparias/springtest
-          dockerfile: demo-apirest-crud/Dockerfile
-          requires:
-            - Build Jar
 
 jobs:
   build-jar:
@@ -39,3 +30,8 @@ jobs:
             mvn -v
             mvn clean install
             ls -la target/
+      - docker/build:
+          dockerfile: demo-apirest-crud/Dockerfile
+          image: rparias/springtest
+      - docker/push:
+          image: rparias/springtest
