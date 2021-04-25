@@ -15,6 +15,15 @@ workflows:
       - build-jar:
           name: Build Jar
           filters: *branch-master-filter
+      - docker/publish:
+          name: Build and deploy image to docker
+          filters: *branch-master-filter
+          context:
+            - docker-hub-context
+          image: rparias/springtest
+          dockerfile: demo-apirest-crud/Dockerfile
+          requires:
+            - Build Jar
 
 jobs:
   build-jar:
@@ -25,17 +34,10 @@ jobs:
       - checkout:
           path: ~/demoSpringRestDocker
       - run:
-          name: Install Maven Dependencies
+          name: Install Dependencies
           command: |
             mvn -v
             mvn clean install
             ls -la target/
-      - run:
-          name: Install Docker Dependencies
-          command: apt-get install jq
-      - docker/install-docker
-      - docker/build:
-          dockerfile: demo-apirest-crud/Dockerfile
-          image: rparias/springtest
-      - docker/push:
-          image: rparias/springtest
+      - store_artifacts:
+          path: target/demo-apirest-0.0.1-SNAPSHOT.jar
