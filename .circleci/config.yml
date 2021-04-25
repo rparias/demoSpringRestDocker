@@ -32,7 +32,7 @@ jobs:
             ls -la target/
       - run:
           name: Install Docker Dependencies
-          command: sudo apt-get install jq
+          command: apt-get install jq
       - docker/install-docker
       - docker/build:
           dockerfile: demo-apirest-crud/Dockerfile
