@@ -39,5 +39,7 @@ jobs:
             mvn -v
             mvn clean install
             ls -la target/
-      - store_artifacts:
-          path: target/demo-apirest-0.0.1-SNAPSHOT.jar
+      - persist_to_workspace:
+          root: target
+          paths:
+            - demo-apirest-0.0.1-SNAPSHOT.jar
