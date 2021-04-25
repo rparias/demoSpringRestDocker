@@ -22,6 +22,7 @@ workflows:
             - docker-hub-context
           image: rparias/springtest
           dockerfile: demo-apirest-crud/Dockerfile
+          tag: $CIRCLE_BUILD_NUM
           requires:
             - Build Jar
 
