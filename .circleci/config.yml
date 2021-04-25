@@ -13,7 +13,7 @@ workflows:
   dev-release:
     jobs:
       - build-jar:
-          name: Build Jar
+          name: Build and Publish Docker Image
           filters: *branch-master-filter
           context:
             - docker-hub-context
