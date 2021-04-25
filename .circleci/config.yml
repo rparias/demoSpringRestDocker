@@ -7,7 +7,7 @@ branch-master-filter: &branch-master-filter
     ignore: /.*/
 
 orbs:
-  docker: circleci/docker@1.5.0
+  aws-cli: circleci/aws-cli@2.0.0
 
 workflows:
   dev-release:
@@ -55,30 +55,23 @@ jobs:
     steps:
       - checkout:
           path: ~/demoSpringRestDocker
+      - aws-cli/install
+      - aws-cli/setup
       - run:
           name: Deploy
           command: |
-            # 1- Install AWS CLI
-            curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
-            unzip awscli-bundle.zip
-            ./awscli-bundle/install -b ~/bin/aws
             # 2- Get the public IP of the current CircleCI runner
             PUBLIC_IP=$(curl ipinfo.io/ip)
-            # 3- Get AWS Region# TODO Don't forget to replcae by your own Region
-            AWS_REGION=us-east-1
-            # 4- Get SG ID# TODO Don't forget to replace by your own SG ID
-            SG_ID=$SECURITY_GROUP_ID
             # 5- Add an ingress rule to the security group
-            ~/bin/aws ec2 authorize-security-group-ingress --region $AWS_REGION --group-id $SG_ID \
+            aws ec2 authorize-security-group-ingress --region $AWS_DEFAULT_REGION --group-id $SECURITY_GROUP_ID \
               --protocol tcp --port 22 --cidr $PUBLIC_IP/24
             # 6- Give the ingress rule some time to propogate
             sleep 5
             # 7- SSH to the server to deploy
-            # TODO Change to your server's URL or public IP
             ssh -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_PUBLIC_DNS \
             # other commands
             # TODO Perform steps to deploy
             echo "Hello from CI"
             # 8- Remove the ingress rule
-            ~/bin/aws ec2 revoke-security-group-ingress --region $AWS_REGION --group-id $SG_ID \
+            aws ec2 revoke-security-group-ingress --region $AWS_DEFAULT_REGION --group-id $SECURITY_GROUP_ID \
               --protocol tcp --port 22 --cidr $PUBLIC_IP/24
