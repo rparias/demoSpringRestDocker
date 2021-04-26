@@ -60,18 +60,20 @@ jobs:
       - run:
           name: Deploy
           command: |
-            # 2- Get the public IP of the current CircleCI runner
+            # 1- Get the public IP of the current CircleCI runner
             PUBLIC_IP=$(curl ipinfo.io/ip)
-            # 5- Add an ingress rule to the security group
+            # 2- Add an ingress rule to the security group
             aws ec2 authorize-security-group-ingress --region $AWS_DEFAULT_REGION --group-id $SECURITY_GROUP_ID \
               --protocol tcp --port 22 --cidr $PUBLIC_IP/24
-            # 6- Give the ingress rule some time to propogate
+            # 3- Give the ingress rule some time to propogate
             sleep 5
-            # 7- SSH to the server to deploy
+            # 4- SSH to the server to deploy
             ssh -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_PUBLIC_DNS \
             # other commands
             # TODO Perform steps to deploy
             echo "Hello from CI"
-            # 8- Remove the ingress rule
+            # 5- Remove the ingress rule
             aws ec2 revoke-security-group-ingress --region $AWS_DEFAULT_REGION --group-id $SECURITY_GROUP_ID \
               --protocol tcp --port 22 --cidr $PUBLIC_IP/24
+            #6- Exit
+            exit
