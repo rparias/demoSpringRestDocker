@@ -12,17 +12,17 @@ orbs:
 workflows:
   dev-release:
     jobs:
-      - build-and-push-image:
-          name: Build and Publish Docker Image
-          filters: *branch-master-filter
-          context:
-            - docker-hub-context
+      # - build-and-push-image:
+      #     name: Build and Publish Docker Image
+      #     filters: *branch-master-filter
+      #     context:
+      #       - docker-hub-context
       - deploy:
           name: Deploy app to Dev
           context:
             - docker-hub-context
-          requires:
-            - Build and Publish Docker Image
+          # requires:
+          #   - Build and Publish Docker Image
 
 jobs:
   build-and-push-image:
@@ -60,20 +60,25 @@ jobs:
       - run:
           name: Deploy
           command: |
-            # 1- Get the public IP of the current CircleCI runner
-            PUBLIC_IP=$(curl ipinfo.io/ip)
-            # 2- Add an ingress rule to the security group
-            aws ec2 authorize-security-group-ingress --region $AWS_DEFAULT_REGION --group-id $SECURITY_GROUP_ID \
-              --protocol tcp --port 22 --cidr $PUBLIC_IP/24
-            # 3- Give the ingress rule some time to propogate
-            sleep 20
-            # 4- SSH to the server to deploy
-            ssh -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_PUBLIC_DNS \
-            # other commands
-            # TODO Perform steps to deploy
-            pwd && ls -la
-            # 5- Remove the ingress rule
-            aws ec2 revoke-security-group-ingress --region $AWS_DEFAULT_REGION --group-id $SECURITY_GROUP_ID \
-              --protocol tcp --port 22 --cidr $PUBLIC_IP/24
-            #6- Exit
-            exit
+            ssh -t $EC2_USERNAME@$EC2_PUBLIC_DNS \<<-'ENDSSH'
+              ls
+              pwd
+              docker ps
+            ENDSSH
+            # # 1- Get the public IP of the current CircleCI runner
+            # PUBLIC_IP=$(curl ipinfo.io/ip)
+            # # 2- Add an ingress rule to the security group
+            # aws ec2 authorize-security-group-ingress --region $AWS_DEFAULT_REGION --group-id $SECURITY_GROUP_ID \
+            #   --protocol tcp --port 22 --cidr $PUBLIC_IP/24
+            # # 3- Give the ingress rule some time to propogate
+            # sleep 20
+            # # 4- SSH to the server to deploy
+            # ssh -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_PUBLIC_DNS \
+            # # other commands
+            # # TODO Perform steps to deploy
+            # pwd && ls -la
+            # # 5- Remove the ingress rule
+            # aws ec2 revoke-security-group-ingress --region $AWS_DEFAULT_REGION --group-id $SECURITY_GROUP_ID \
+            #   --protocol tcp --port 22 --cidr $PUBLIC_IP/24
+            # #6- Exit
+            # exit
