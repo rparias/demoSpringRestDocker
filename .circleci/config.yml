@@ -66,12 +66,12 @@ jobs:
             aws ec2 authorize-security-group-ingress --region $AWS_DEFAULT_REGION --group-id $SECURITY_GROUP_ID \
               --protocol tcp --port 22 --cidr $PUBLIC_IP/24
             # 3- Give the ingress rule some time to propogate
-            sleep 5
+            sleep 20
             # 4- SSH to the server to deploy
             ssh -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_PUBLIC_DNS \
             # other commands
             # TODO Perform steps to deploy
-            echo "Hello from CI"
+            pwd && ls -la
             # 5- Remove the ingress rule
             aws ec2 revoke-security-group-ingress --region $AWS_DEFAULT_REGION --group-id $SECURITY_GROUP_ID \
               --protocol tcp --port 22 --cidr $PUBLIC_IP/24
