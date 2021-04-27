@@ -71,9 +71,10 @@ jobs:
             sleep 5
             # 4- SSH to the server to deploy
             ssh -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_PUBLIC_DNS \
-            "pwd && ls -la && exit"
+            "pwd && \
+            docker ps && \
             # 5- Remove the ingress rule
-            # ~/bin/aws ec2 revoke-security-group-ingress --region $AWS_DEFAULT_REGION --group-id $SECURITY_GROUP_ID \
-            #   --protocol tcp --port 22 --cidr $PUBLIC_IP/24
-            # #6- Exit
-            # exit
+            ~/bin/aws ec2 revoke-security-group-ingress --region $AWS_DEFAULT_REGION --group-id $SECURITY_GROUP_ID \
+              --protocol tcp --port 22 --cidr $PUBLIC_IP/24 && \
+            #6- Exit
+            exit"
