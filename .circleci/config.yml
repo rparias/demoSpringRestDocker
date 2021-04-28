@@ -72,7 +72,13 @@ jobs:
             # 4- SSH to the server to deploy
             ssh -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_PUBLIC_DNS \
             "pwd && \
-            docker ps"
+            scp ./docker-compose-app.yml ./docker-compose-db.yml \
+            ./script.sql ./stop-spring-app.sh \
+            $EC2_USERNAME@$EC2_PUBLIC_DNS:/home/$EC2_USERNAME/server && \
+            export BUILD_NUMBER=0.1.$CIRCLE_BUILD_NUM && \
+            export APP_NAME=spring-app && \
+            cd server && sh stop-spring-app.sh && \
+            docker-compose -f docker-compose-app.yml up -d"
             # 5- Remove the ingress rule
             ~/bin/aws ec2 revoke-security-group-ingress --region $AWS_DEFAULT_REGION --group-id $SECURITY_GROUP_ID \
               --protocol tcp --port 22 --cidr $PUBLIC_IP/24
