@@ -26,6 +26,8 @@ workflows:
 
 jobs:
   build-and-push-image:
+    environment:
+      IMAGETAG: << pipeline.number >>
     working_directory: ~/demoSpringRestDocker/demo-apirest-crud
     docker:
       - image: cimg/openjdk:14.0
@@ -44,11 +46,13 @@ jobs:
       - run:
           name: Build Docker Image
           command: |
-            TAG=0.1.$CIRCLE_BUILD_NUM
+            TAG=0.1.$IMAGETAG
             docker login --username ${DOCKER_LOGIN} --password ${DOCKER_PASSWORD}
             docker build -t rparias/springtest:v$TAG .
             docker push rparias/springtest:v${TAG}
   deploy:
+    environment:
+      IMAGETAG: << pipeline.number >>
     working_directory: ~/demoSpringRestDocker/demo-apirest-crud
     docker:
       - image: circleci/openjdk:8-jdk
@@ -72,7 +76,7 @@ jobs:
             # 4- SSH to the server to deploy
             ssh -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_PUBLIC_DNS \
             "pwd && \
-            export BUILD_NUMBER=0.1.$CIRCLE_BUILD_NUM && \
+            export BUILD_NUMBER=0.1.IMAGETAG && \
             export APP_NAME=spring-app && \
             export HOST=$HOST && \
             export USER_DB=$USER_DB && \
