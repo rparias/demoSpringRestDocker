@@ -3,8 +3,10 @@ services:
   spring-app:
     container_name: spring-app
     image: rparias/springtest:${BUILD_NUMBER}
-    networks:
-      - internal-network
+    environment:
+      - USER_DB=$USER_DB
+      - PASSWORD_DB=$PASSWORD_DB
+      - HOST=$HOST
     ports:
       - 8080:8080
     command:
@@ -13,6 +15,4 @@ services:
         '-jar',
         './demo-apirest-0.0.1-SNAPSHOT.jar',
       ]
-networks:
-  internal-network:
 # docker exec -i mysqldb sh -c 'exec mysql -u"$MYSQL_USER" -p"$MYSQL_PASSWORD"' < $PWD/script.sql
