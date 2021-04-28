@@ -12,17 +12,17 @@ orbs:
 workflows:
   dev-release:
     jobs:
-      # - build-and-push-image:
-      #     name: Build and Publish Docker Image
-      #     filters: *branch-master-filter
-      #     context:
-      #       - docker-hub-context
+      - build-and-push-image:
+          name: Build and Publish Docker Image
+          filters: *branch-master-filter
+          context:
+            - docker-hub-context
       - deploy:
           name: Deploy app to Dev
           context:
             - docker-hub-context
-          # requires:
-          #   - Build and Publish Docker Image
+          requires:
+            - Build and Publish Docker Image
 
 jobs:
   build-and-push-image:
