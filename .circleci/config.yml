@@ -77,7 +77,7 @@ jobs:
             export HOST=$HOST && \
             export USER_DB=$USER_DB && \
             export PASSWORD_DB=$PASSWORD_DB && \
-            cd server && sh stop-spring-app.sh && \
+            cd server && \
             docker-compose -f docker-compose-app-ci.yml up -d"
             # 5- Remove the ingress rule
             ~/bin/aws ec2 revoke-security-group-ingress --region $AWS_DEFAULT_REGION --group-id $SECURITY_GROUP_ID \
